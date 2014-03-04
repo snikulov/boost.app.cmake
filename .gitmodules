@@ -7,3 +7,6 @@
 [submodule "hdr/singularity"]
 	path = hdr/singularity
 	url = https://github.com/cppmaven/Singularity.git
+[submodule "hdr/type_index"]
+	path = hdr/type_index
+	url = https://github.com/apolukhin/type_index.git
