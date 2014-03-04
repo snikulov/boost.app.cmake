@@ -1,0 +1,9 @@
+[submodule "type_index"]
+	path = type_index
+	url = https://github.com/apolukhin/type_index.git
+[submodule "hdr/application"]
+	path = hdr/application
+	url = https://github.com/retf/Boost.Application.git
+[submodule "hdr/singularity"]
+	path = hdr/singularity
+	url = https://github.com/cppmaven/Singularity.git
