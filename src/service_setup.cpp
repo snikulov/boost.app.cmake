@@ -27,11 +27,6 @@
 // executable, in thiscase, service name will be: 'windows_service_setup'
 // -----------------------------------------------------------------------------
 
-#define BOOST_ALL_DYN_LINK
-#define BOOST_LIB_DIAGNOSTIC
-
-#define BOOST_APPLICATION_FEATURE_NS_SELECT_BOOST
-
 #include <boost\application.hpp>
 #include <boost\program_options.hpp>
 
@@ -58,8 +53,8 @@ public:
          (",i", "install service")
          (",c", "check service")
          (",u", "unistall service")
-         ("path", "service path")
-         ("name", "service name")
+         ("path", po::value<std::string>()->default_value(""), "service path")
+         ("name", po::value<std::string>()->default_value(""), "service name")
          ("display", po::value<std::string>()->default_value(""), "service display name (optional, installation only)")
          ("description", po::value<std::string>()->default_value(""), "service description (optional, installation only)")
          ;
@@ -76,8 +71,9 @@ public:
 
       if (vm.count("-i")) 
       {
+		  std::string name_ = vm["name"].as<std::string>();
          application::install_windows_service(
-         application::setup_arg(vm["name"].as<std::string>()), 
+         application::setup_arg(name_), 
          application::setup_arg(vm["display"].as<std::string>()), 
          application::setup_arg(vm["description"].as<std::string>()), 
          application::setup_arg(vm["path"].as<std::string>())).install(ec);

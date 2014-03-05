@@ -4,6 +4,8 @@ set(PROJECT_NAME boost_app_samples)
 
 project(${PROJECT_NAME} CXX)
 
+# we will use static libs
+set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost
    COMPONENTS thread system date_time chrono regex
    filesystem atomic program_options REQUIRED)

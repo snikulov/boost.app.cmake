@@ -10,11 +10,6 @@
 // application_mode_select[.exe]    (run as server daemon) (default)
 // -----------------------------------------------------------------------------
 
-#define BOOST_ALL_DYN_LINK
-#define BOOST_LIB_DIAGNOSTIC
-
-#define BOOST_APPLICATION_FEATURE_NS_SELECT_BOOST
-
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <boost/application.hpp>
