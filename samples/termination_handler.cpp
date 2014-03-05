@@ -16,7 +16,7 @@
 
 #include <iostream>
 #include <boost/application.hpp>
-#include <boost/uuid/string_generator.hpp>
+//#include <boost/uuid/string_generator.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 
@@ -36,54 +36,21 @@ public:
       while(1)
       {
          boost::this_thread::sleep(boost::posix_time::seconds(2));
-         std::cout << "running" << std::endl;
       }
    }
 
    // param
    int operator()(context& context)
    {
-      std::cout << "operator()" << std::endl;
-	  
-	  // using [state]
-
-      /*
-      std::shared_ptr<status> state = 
-         context.get_aspect<status>();
-
-      while(state->state() != status::stoped)
-      {
-         boost::this_thread::sleep(boost::posix_time::seconds(2));
-         std::cout << "running" << std::endl;
-      }
-      */
-
-      // or using [wait_for_termination_request]
-
-      // launch a work thread
       boost::thread thread(boost::bind(&myapp::work_thread, this));
-	  
       context.find<wait_for_termination_request>()->wait();
-
       return 0;
    }
 
    bool stop(context &context)
    {
-      char type;
-      do
-      {
-         std::cout << "Do you want to exit? [y/n]" << std::endl;
-         std::cin >> type;
-      }
-      while( !std::cin.fail() && type!='y' && type!='n' );
 
-      if(type == 'y')
-          // tell to app to continue.
-         return true;
-
-      // tell to app to exit.
-      return false;
+      return true;
    }
 
 };
@@ -94,12 +61,7 @@ int main(int argc, char *argv[])
 {   
    myapp app;
    context app_context;
-
-   handler<>::parameter_callback callback 
-      = boost::bind<bool>(&myapp::stop, &app, _1);
-
-   app_context.insert<termination_handler>(
-      boost::make_shared<termination_handler_default_behaviour>(callback));
-
+   handler<>::parameter_callback callback = boost::bind<bool>(&myapp::stop, &app, _1);
+   app_context.insert<termination_handler>(boost::make_shared<termination_handler_default_behaviour>(callback));
    return launch<common>(app, app_context);
 }
