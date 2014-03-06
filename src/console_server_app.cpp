@@ -31,38 +31,38 @@ public:
         std::cout << "Done!" << std::endl;
     }
 
-   void work_thread()
-   {
-       std::cout << "Server thread is running... Press <Ctrl>+<C> to interrupt" << std::endl;
-       while(1)
-       {
-           boost::this_thread::sleep(boost::posix_time::seconds(2));
-       }
-   }
+    void work_thread()
+    {
+        std::cout << "Server thread is running... Press <Ctrl>+<C> to interrupt" << std::endl;
+        while(1)
+        {
+            boost::this_thread::sleep(boost::posix_time::seconds(2));
+        }
+    }
 
-   // param
-   int operator()(context& context)
-   {
-      boost::thread t(boost::bind(&myapp::work_thread, this));
-      context.find<wait_for_termination_request>()->wait();
+    // param
+    int operator()(context& context)
+    {
+        boost::thread t(boost::bind(&myapp::work_thread, this));
+        context.find<wait_for_termination_request>()->wait();
 //	  t.join();
-      return 0;
-   }
+        return 0;
+    }
 
-   bool stop(context &context)
-   {
-       std::cout << "Terminate requested!!!" << std::endl;
-       return true;
-   }
+    bool stop(context &context)
+    {
+        std::cout << "Terminate requested!!!" << std::endl;
+        return true;
+    }
 
 };
 
 // main
 int main(int argc, char *argv[])
 {
-   myapp app;
-   context app_context;
-   handler<>::parameter_callback callback = boost::bind<bool>(&myapp::stop, &app, _1);
-   app_context.insert<termination_handler>(boost::make_shared<termination_handler_default_behaviour>(callback));
-   return launch<common>(app, app_context);
+    myapp app;
+    context app_context;
+    handler<>::parameter_callback callback = boost::bind<bool>(&myapp::stop, &app, _1);
+    app_context.insert<termination_handler>(boost::make_shared<termination_handler_default_behaviour>(callback));
+    return launch<common>(app, app_context);
 }

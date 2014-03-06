@@ -8,7 +8,7 @@ project(${PROJECT_NAME} CXX)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost
    COMPONENTS thread system date_time chrono regex
-   filesystem atomic program_options REQUIRED)
+   filesystem atomic program_options unit_test_framework REQUIRED)
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
     link_directories(${Boost_LIBRARY_DIRS})
@@ -26,3 +26,7 @@ add_definitions(-DBOOST_APPLICATION_FEATURE_NS_SELECT_BOOST)
 
 add_subdirectory(src)
 add_subdirectory(samples)
+
+include(CTest)
+enable_testing()
+add_subdirectory(test)
