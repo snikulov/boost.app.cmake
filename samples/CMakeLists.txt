@@ -17,5 +17,8 @@ foreach(SAMPLE_FILE ${SRC_FILES})
         ${Boost_REGEX_LIBRARY} ${Boost_FILESYSTEM_LIBRARY}
         ${Boost_ATOMIC_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY}
 	)
+    if(UNIX)
+        target_link_libraries(${TARGET_NAME} pthread)
+    endif()
 endforeach()
 

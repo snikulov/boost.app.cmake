@@ -14,3 +14,6 @@ target_link_libraries(${PROJECT_NAME}
         ${Boost_ATOMIC_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY}
 	)
 
+if(UNIX)
+    target_link_libraries(${PROJECT_NAME} pthread)
+endif()
