@@ -45,7 +45,6 @@ public:
     {
         boost::thread t(boost::bind(&myapp::work_thread, this));
         context.find<wait_for_termination_request>()->wait();
-//	  t.join();
         return 0;
     }
 

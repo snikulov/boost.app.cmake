@@ -10,3 +10,9 @@
 [submodule "hdr/type_index"]
 	path = hdr/type_index
 	url = https://github.com/apolukhin/type_index.git
+[submodule "hdr/cppzmq"]
+	path = hdr/cppzmq
+	url = https://github.com/zeromq/cppzmq.git
+[submodule "cmake"]
+	path = cmake
+	url = https://github.com/snikulov/cmake-modules.git
