@@ -6,7 +6,7 @@
 using namespace boost::application;
 
 zmqapp::zmqapp()
-    : context_(1)
+    : context_(1), socket_ptr_(nullptr)
 {
 }
 
@@ -24,7 +24,7 @@ int zmqapp::operator()(boost::application::context& context)
 bool zmqapp::stop(boost::application::context &context)
 {
     std::cout << "Terminate requested!!!" << std::endl;
-    socket_ptr_.reset();
+    socket_ptr_->close();
     return true;
 }
 
@@ -40,7 +40,7 @@ void zmqapp::work_thread()
         request_nbr++;
         zmq::message_t request (6);
         memcpy ((void *) request.data (), "Hello", 5);
-        std::cout << "Sending Hello " << request_nbr << "…" << std::endl;
+        std::cout << "Sending Hello " << request_nbr << std::endl;
         socket_ptr_->send (request);
 
         //  Get the reply.
