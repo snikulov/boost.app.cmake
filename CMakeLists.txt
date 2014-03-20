@@ -14,18 +14,19 @@ set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost
    COMPONENTS thread system date_time chrono regex
    filesystem atomic program_options unit_test_framework REQUIRED)
-if (Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIR})
-    link_directories(${Boost_LIBRARY_DIRS})
-    message("-- Boost version is: ${Boost_VERSION}")
-else()
-    message(FATAL "Boost required")
+if (NOT Boost_FOUND)
+    message(FATAL "Boost not found")
 endif()
+
+include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIRS})
 
 find_package(ZMQ)
 if(NOT LIBZMQ_FOUND)
     message(FATAL "LibZMQ not found")
 endif()
+
+include_directories(${LIBZMQ_INCLUDE_DIR})
 
 include_directories(hdr)
 include_directories(hdr/application/include)
