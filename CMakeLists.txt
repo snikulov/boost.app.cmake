@@ -22,11 +22,14 @@ include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
 find_package(ZMQ)
-if(NOT LIBZMQ_FOUND)
-    message(STATUS "LibZMQ not found")
+if(LIBZMQ_FOUND)
+    message("-- LibZMQ version: ${LIBZMQ_VERSION_STRING}")
 endif()
 
 find_package(Thrift)
+if(THRIFT_FOUND)
+    message("-- Thrift version: ${THRIFT_VERSION_STRING}")
+endif()
 
 include_directories(${LIBZMQ_INCLUDE_DIR})
 
