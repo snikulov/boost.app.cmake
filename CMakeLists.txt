@@ -7,7 +7,7 @@ project(${PROJECT_NAME} CXX)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 option(WITH_SAMPLES "Build boost::app samples" OFF)
-option(WITH_TESTS   "Build boost::app tests"   OFF)
+option(WITH_TESTS   "Build boost::app tests"   ON)
 
 # we will use static libs
 set(Boost_USE_STATIC_LIBS ON)
