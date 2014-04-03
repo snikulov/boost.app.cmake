@@ -7,7 +7,7 @@ project(${PROJECT_NAME} CXX)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 option(WITH_SAMPLES "Build boost::app samples" OFF)
-option(WITH_TESTS   "Build boost::app tests"   OFF)
+option(WITH_TESTS   "Build boost::app tests"   ON)
 
 # we will use static libs
 set(Boost_USE_STATIC_LIBS ON)
@@ -29,6 +29,13 @@ endif()
 find_package(Thrift)
 if(THRIFT_FOUND)
     message("-- Thrift version: ${THRIFT_VERSION_STRING}")
+    set(THRIFT_GEN_SRC "")
+    file(GLOB _thrift_files ${PROJECT_SOURCE_DIR}/thrift/*.thrift)
+    foreach(_thrift_file ${_thrift_files})
+        thrift_gen_cpp(${_thrift_file} THRIFT_GEN_SRC)
+# DEBUG
+#	message("THRIFT_GEN_SRC = ${THRIFT_GEN_SRC}")
+    endforeach()
 endif()
 
 include_directories(${LIBZMQ_INCLUDE_DIR})
