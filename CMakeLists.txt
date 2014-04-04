@@ -18,7 +18,7 @@ if (NOT Boost_FOUND)
     message(FATAL "Boost not found")
 endif()
 
-include_directories(${Boost_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 find_package(ZMQ)
@@ -40,9 +40,12 @@ endif()
 
 include_directories(${LIBZMQ_INCLUDE_DIR})
 
+set(BOOST_APP_ROOT "hdr/application")
+get_filename_component(__abs_path ${BOOST_APP_ROOT} ABSOLUTE)
+file(TO_CMAKE_PATH ${__abs_path} BOOST_APP_ROOT_PATH)
+
 include_directories(hdr)
-include_directories(hdr/application/include)
-include_directories(hdr/singularity)
+include_directories(${BOOST_APP_ROOT}/include)
 include_directories(hdr/type_index/include)
 
 add_definitions(-DBOOST_APPLICATION_FEATURE_NS_SELECT_BOOST)

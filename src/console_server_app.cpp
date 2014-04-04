@@ -26,8 +26,10 @@ using namespace boost::application;
 int main(int argc, char *argv[])
 {
     zmqapp app;
-    context app_context;
+
+    global_context_ptr ctx = global_context::create();
+
     handler<>::parameter_callback callback = boost::bind<bool>(&zmqapp::stop, &app, _1);
-    app_context.insert<termination_handler>(boost::make_shared<termination_handler_default_behaviour>(callback));
-    return launch<common>(app, app_context);
+    ctx->insert<termination_handler>(boost::make_shared<termination_handler_default_behaviour>(callback));
+    return launch<common>(app, ctx);
 }
