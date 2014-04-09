@@ -144,3 +144,16 @@ add_dependencies(shared_library_search_symbol_test test_library)
 add_test(NAME shared_library_search_symbol_test
          COMMAND shared_library_search_symbol_test ./${_out_name})
 
+# Multiple units test
+include_directories(${BOOST_APP_TEST_PATH})
+set(TMUNIT_SRC ${BOOST_APP_TEST_PATH}/tunit_test.cpp ${BOOST_APP_TEST_PATH}/myapp.cpp ${BOOST_APP_TEST_PATH}/myapp.h)
+add_executable(tunit_test ${TMUNIT_SRC})
+target_link_libraries(tunit_test
+        ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
+        ${Boost_DATE_TIME_LIBRARY} ${Boost_CHRONO_LIBRARY}
+        ${Boost_REGEX_LIBRARY} ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_ATOMIC_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY}
+        ${Boost_UNIT_TEST_FRAMEWORK}
+	)
+add_test(tunit_test tunit_test)
+
