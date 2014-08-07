@@ -1,9 +1,9 @@
-[submodule "type_index"]
-	path = type_index
-	url = https://github.com/apolukhin/type_index.git
 [submodule "hdr/application"]
 	path = hdr/application
 	url = https://github.com/retf/Boost.Application.git
 [submodule "cmake"]
 	path = cmake
 	url = https://github.com/snikulov/cmake-modules.git
+[submodule "hdr/plugin"]
+	path = hdr/plugin
+	url = https://github.com/apolukhin/Boost.Plugin.git
