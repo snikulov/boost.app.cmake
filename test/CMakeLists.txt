@@ -104,46 +104,6 @@ target_link_libraries(simple_server_application_test
 	)
 add_test(simple_server_application_test simple_server_application_test)
 
-add_library(test_library SHARED ${BOOST_APP_TEST_PATH}/test_library.cpp)
-get_target_property(__loc_name test_library LOCATION)
-get_filename_component(_out_name ${__loc_name} NAME)
-
-add_executable(shared_library_get_symbol_test ${BOOST_APP_TEST_PATH}/shared_library_get_symbol_test.cpp)
-target_link_libraries(shared_library_get_symbol_test
-        ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
-        ${Boost_DATE_TIME_LIBRARY} ${Boost_CHRONO_LIBRARY}
-        ${Boost_REGEX_LIBRARY} ${Boost_FILESYSTEM_LIBRARY}
-        ${Boost_ATOMIC_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY}
-        ${Boost_UNIT_TEST_FRAMEWORK}
-	)
-add_dependencies(shared_library_get_symbol_test test_library)
-add_test(NAME shared_library_get_symbol_test
-         COMMAND shared_library_get_symbol_test ./${_out_name})
-
-add_executable(shared_library_load_test ${BOOST_APP_TEST_PATH}/shared_library_load_test.cpp)
-target_link_libraries(shared_library_load_test
-        ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
-        ${Boost_DATE_TIME_LIBRARY} ${Boost_CHRONO_LIBRARY}
-        ${Boost_REGEX_LIBRARY} ${Boost_FILESYSTEM_LIBRARY}
-        ${Boost_ATOMIC_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY}
-        ${Boost_UNIT_TEST_FRAMEWORK}
-	)
-add_dependencies(shared_library_load_test test_library)
-add_test(NAME shared_library_load_test
-         COMMAND shared_library_load_test ./${_out_name})
-
-add_executable(shared_library_search_symbol_test ${BOOST_APP_TEST_PATH}/shared_library_search_symbol_test.cpp)
-target_link_libraries(shared_library_search_symbol_test
-        ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
-        ${Boost_DATE_TIME_LIBRARY} ${Boost_CHRONO_LIBRARY}
-        ${Boost_REGEX_LIBRARY} ${Boost_FILESYSTEM_LIBRARY}
-        ${Boost_ATOMIC_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY}
-        ${Boost_UNIT_TEST_FRAMEWORK}
-	)
-add_dependencies(shared_library_search_symbol_test test_library)
-add_test(NAME shared_library_search_symbol_test
-         COMMAND shared_library_search_symbol_test ./${_out_name})
-
 # Multiple units test
 include_directories(${BOOST_APP_TEST_PATH})
 set(TMUNIT_SRC ${BOOST_APP_TEST_PATH}/tunit_test.cpp ${BOOST_APP_TEST_PATH}/myapp.cpp ${BOOST_APP_TEST_PATH}/myapp.h)

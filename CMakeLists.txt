@@ -6,7 +6,7 @@ project(${PROJECT_NAME} CXX)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
-option(WITH_SAMPLES "Build boost::app samples" OFF)
+option(WITH_SAMPLES "Build boost::app samples" ON)
 option(WITH_TESTS   "Build boost::app tests"   ON)
 
 # we will use static libs
@@ -20,26 +20,6 @@ endif()
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
-
-find_package(ZMQ)
-if(LIBZMQ_FOUND)
-    message("-- LibZMQ version: ${LIBZMQ_VERSION_STRING}")
-endif()
-
-find_package(Thrift)
-if(THRIFT_FOUND)
-    message("-- Thrift version: ${THRIFT_VERSION_STRING}")
-    set(THRIFT_GEN_SRC "")
-    set(THRIFT_GEN_INCLUDE_DIR "")
-    file(GLOB _thrift_files ${PROJECT_SOURCE_DIR}/thrift/*.thrift)
-    foreach(_thrift_file ${_thrift_files})
-        thrift_gen_cpp(${_thrift_file} THRIFT_GEN_SRC THRIFT_GEN_INCLUDE_DIR)
-# DEBUG
-#	message("THRIFT_GEN_SRC = ${THRIFT_GEN_SRC}")
-    endforeach()
-endif()
-
-include_directories(${LIBZMQ_INCLUDE_DIR})
 
 set(BOOST_APP_ROOT "hdr/application")
 get_filename_component(__abs_path ${BOOST_APP_ROOT} ABSOLUTE)
