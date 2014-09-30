@@ -194,6 +194,9 @@ int main(int argc, char *argv[])
     if(ec)
     {
         // log...
+        std::cout << "[E] " << ec.message() 
+            << " <" << ec.value() << "> " << std::cout;
+	
     }
 
     return result;
