@@ -9,6 +9,14 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 option(WITH_SAMPLES "Build boost::app samples" ON)
 option(WITH_TESTS   "Build boost::app tests"   ON)
 
+if (NOT DEPS_LOCATION)
+    set(DEPS_LOCATION "${CMAKE_BINARY_DIR}/deps")
+endif()
+add_subdirectory(ext/log4cplus)
+
+include_directories(${DEPS_LOCATION}/include)
+link_directories(${DEPS_LOCATION}/lib)
+
 # we will use static libs
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost

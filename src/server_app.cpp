@@ -1,13 +1,46 @@
 #include <boost/program_options.hpp>
 #include <boost/application.hpp>
 
+#include <log4cplus/logger.h>
+#include <log4cplus/loglevel.h>
+#include <log4cplus/configurator.h>
+#include <log4cplus/loggingmacros.h>
+#include <log4cplus/win32debugappender.h>
+#include <log4cplus/nullappender.h>
+#include <log4cplus/helpers/property.h>
+
+
 // provide setup example for windows service
 #if defined(BOOST_WINDOWS_API)
 #   include "setup/windows/setup/service_setup.hpp"
 #endif
 
-namespace po = boost::program_options;
+using namespace log4cplus;
+using namespace log4cplus::helpers;
+using namespace log4cplus::spi;
 
+void init_default(Logger& target, LogLevel ll)
+{
+
+    // TODO: We're on Windows so far - so consider Syslog for unix
+
+    // Add WinDbgAppender by default
+    SharedObjectPtr<Appender> a(new Win32DebugAppender());
+    log4cplus::tstring pattern = LOG4CPLUS_TEXT("%D{%d-%m-%Y %H:%M:%S.%q} %c{2} %-5p [%l] %m%n");
+
+    a->setLayout(std::auto_ptr<Layout>(new PatternLayout(pattern)));
+
+    // hack settings for root, just to avoid default console log
+    Logger root = Logger::getRoot();
+    root.addAppender(SharedObjectPtr<Appender>(new NullAppender()));
+    root.setLogLevel(log4cplus::OFF_LOG_LEVEL);
+
+    target.addAppender(a);
+    target.setLogLevel(ll);
+}
+
+
+namespace po = boost::program_options;
 
 class server
 {
@@ -136,6 +169,11 @@ bool setup(boost::application::context& context, bool& is_service)
 
 int main(int argc, char *argv[])
 {
+    Logger logger = Logger::getInstance(LOG4CPLUS_TEXT("IPF.MCU"));
+    init_default(logger, log4cplus::INFO_LOG_LEVEL);
+
+    LOG4CPLUS_INFO(logger, "Running boost::application example");
+
     boost::application::context app_context;
     server app(app_context);
 
