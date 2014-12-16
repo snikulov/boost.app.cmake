@@ -6,8 +6,8 @@ project(${PROJECT_NAME} CXX)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
-option(WITH_SAMPLES "Build boost::app samples" ON)
-option(WITH_TESTS   "Build boost::app tests"   ON)
+option(WITH_SAMPLES "Build boost::app samples" OFF)
+option(WITH_TESTS   "Build boost::app tests"   OFF)
 
 if (NOT DEPS_LOCATION)
     set(DEPS_LOCATION "${CMAKE_BINARY_DIR}/deps")

@@ -21,10 +21,10 @@ using namespace log4cplus::spi;
 
 void init_default(Logger& target, LogLevel ll)
 {
-
     // TODO: We're on Windows so far - so consider Syslog for unix
 
     // Add WinDbgAppender by default
+
     SharedObjectPtr<Appender> a(new Win32DebugAppender());
     log4cplus::tstring pattern = LOG4CPLUS_TEXT("%D{%d-%m-%Y %H:%M:%S.%q} %c{2} %-5p [%l] %m%n");
 
@@ -169,7 +169,8 @@ bool setup(boost::application::context& context, bool& is_service)
 
 int main(int argc, char *argv[])
 {
-    Logger logger = Logger::getInstance(LOG4CPLUS_TEXT("IPF.MCU"));
+    BasicConfigurator::doConfigure();
+    Logger logger = Logger::getInstance(LOG4CPLUS_TEXT("boost.app.log4cplus"));
     init_default(logger, log4cplus::INFO_LOG_LEVEL);
 
     LOG4CPLUS_INFO(logger, "Running boost::application example");
