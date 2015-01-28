@@ -32,7 +32,7 @@ void init_default(Logger& target, LogLevel ll)
 
     // hack settings for root, just to avoid default console log
     Logger root = Logger::getRoot();
-    root.addAppender(SharedObjectPtr<Appender>(new NullAppender()));
+    root.addAppender(a);
     root.setLogLevel(log4cplus::OFF_LOG_LEVEL);
 
     target.addAppender(a);
@@ -48,20 +48,29 @@ class server
         server(boost::application::context& ctx)
             : ctx_(ctx)
         {
+            BasicConfigurator::doConfigure();
+            logger_ = Logger::getInstance(LOG4CPLUS_TEXT("app.service"));
+            init_default(logger_, log4cplus::INFO_LOG_LEVEL);
         }
 
         void worker()
         {
+            unsigned int cnt = 0;
+
             boost::shared_ptr<boost::application::status> st = ctx_.find<boost::application::status>();
             while(st->state() != boost::application::status::stopped)
             {
                 // sleep one second...
                 boost::this_thread::sleep(boost::posix_time::seconds(1));
+                LOG4CPLUS_INFO(logger_, "Running worker... count=" << cnt++);
+
             }
         }
 
         int operator()()
         {
+            LOG4CPLUS_INFO(logger_, "Running server class");
+
             // launch a work thread
             boost::thread thread(&server::worker, this);
 
@@ -75,21 +84,25 @@ class server
 
         bool stop()
         {
+            LOG4CPLUS_INFO(logger_, "Stop server class");
             return true;
         }
 
         bool pause()
         {
+            LOG4CPLUS_INFO(logger_, "Pause server class");
             return true;
         }
 
         bool resume()
         {
+            LOG4CPLUS_INFO(logger_, "Resume server class");
             return true;
         }
 
     private:
         boost::application::context& ctx_;
+        Logger logger_;
 };
 
 bool setup(boost::application::context& context, bool& is_service)
