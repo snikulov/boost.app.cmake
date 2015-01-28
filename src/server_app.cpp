@@ -112,15 +112,14 @@ bool setup(boost::application::context& context, bool& is_service)
    boost::shared_ptr<boost::application::args> myargs
       = context.find<boost::application::args>(guard);
 
-   boost::shared_ptr<boost::application::path> mypath
-      = context.find<boost::application::path>(guard);
+   boost::application::path mypath;
 
 // provide setup for windows service
 #if defined(BOOST_WINDOWS_API)
 #if !defined(__MINGW32__)
 
    // get our executable path name
-   boost::filesystem::path executable_path_name = mypath->executable_path_name();
+   boost::filesystem::path executable_path_name = mypath.executable_path_name();
 
    // define our simple installation schema options
    po::options_description install("service options");
@@ -129,7 +128,7 @@ bool setup(boost::application::context& context, bool& is_service)
       (",i", "install service")
       (",u", "unistall service")
       (",c", "run on console")
-      ("name", po::value<std::string>()->default_value(mypath->executable_name().stem().string()), "service name")
+      ("name", po::value<std::string>()->default_value(mypath.executable_name().stem().string()), "service name")
       ("display", po::value<std::string>()->default_value(""), "service display name (optional, installation only)")
       ("description", po::value<std::string>()->default_value(""), "service description (optional, installation only)")
       ;
@@ -192,8 +191,8 @@ int main(int argc, char *argv[])
     server app(app_context);
 
     // my server aspects
-    app_context.insert<boost::application::path>(
-            boost::make_shared<boost::application::path_default_behaviour>(argc, argv));
+//    app_context.insert<boost::application::path>(
+//            boost::make_shared<boost::application::path_default_behaviour>(argc, argv));
     app_context.insert<boost::application::args>(
             boost::make_shared<boost::application::args>(argc, argv));
 
@@ -246,9 +245,9 @@ int main(int argc, char *argv[])
     if(ec)
     {
         // log...
-        std::cout << "[E] " << ec.message() 
+        std::cout << "[E] " << ec.message()
             << " <" << ec.value() << "> " << std::cout;
-	
+
     }
 
     return result;
