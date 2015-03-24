@@ -8,6 +8,7 @@
 #include <log4cplus/win32debugappender.h>
 #include <log4cplus/nullappender.h>
 #include <log4cplus/helpers/property.h>
+#include <log4cplus/fileappender.h>
 
 
 // provide setup example for windows service
@@ -24,8 +25,11 @@ void init_default(Logger& target, LogLevel ll)
     // TODO: We're on Windows so far - so consider Syslog for unix
 
     // Add WinDbgAppender by default
-
+#if defined(BOOST_WINDOWS_API)
     SharedObjectPtr<Appender> a(new Win32DebugAppender());
+#else
+    SharedObjectPtr<Appender> a(new FileAppender("server.log"));
+#endif
     log4cplus::tstring pattern = LOG4CPLUS_TEXT("%D{%d-%m-%Y %H:%M:%S.%q} %c{2} %-5p [%l] %m%n");
 
     a->setLayout(std::auto_ptr<Layout>(new PatternLayout(pattern)));
@@ -175,6 +179,31 @@ bool setup(boost::application::context& context, bool& is_service)
          return true;
       }
 #endif
+#else
+   boost::filesystem::path executable_path_name = mypath->executable_path_name();
+
+   // define our simple installation schema options
+   po::options_description install("service options");
+   install.add_options()
+      ("help", "produce a help message")
+      (",c", "run on console")
+      ;
+
+      po::variables_map vm;
+      po::store(po::parse_command_line(myargs->argc(), myargs->argv(), install), vm);
+      boost::system::error_code ec;
+
+      if (vm.count("help"))
+      {
+         std::cout << install << std::cout;
+         return true;
+      }
+
+      if (vm.count("-c"))
+      {
+          is_service = false;
+          return false;
+      }
 #endif
 
    return false;
