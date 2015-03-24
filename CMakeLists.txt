@@ -18,7 +18,7 @@ include_directories(${DEPS_LOCATION}/include)
 link_directories(${DEPS_LOCATION}/lib)
 
 # we will use static libs
-set(Boost_USE_STATIC_LIBS ON)
+#set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost
    COMPONENTS thread system date_time chrono regex
    filesystem atomic program_options unit_test_framework REQUIRED)
