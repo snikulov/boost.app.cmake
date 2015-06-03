@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 set(PROJECT_NAME boost_app_samples)
 
-project(${PROJECT_NAME} CXX)
+project(${PROJECT_NAME})
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 option(WITH_SAMPLES "Build boost::app samples" OFF)
-option(WITH_TESTS   "Build boost::app tests"   OFF)
+option(WITH_UT   "Build boost::app tests"   ON)
 
 if (NOT DEPS_LOCATION)
     set(DEPS_LOCATION "${CMAKE_BINARY_DIR}/deps")
@@ -27,6 +27,9 @@ find_package(Boost
 if (NOT Boost_FOUND)
     message(FATAL "Boost not found")
 endif()
+if (Boost_VERSION LESS 105600)
+    message(FATAL "Required Boost version >= 1.56.0")
+endif()
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
@@ -38,11 +41,6 @@ file(TO_CMAKE_PATH ${__abs_path} BOOST_APP_ROOT_PATH)
 include_directories(hdr)
 include_directories(${BOOST_APP_ROOT}/include)
 include_directories(${BOOST_APP_ROOT}/example)
-if (Boost_VERSION LESS 105600)
-    include_directories(hdr/type_index/include)
-endif()
-
-add_definitions(-DBOOST_APPLICATION_FEATURE_NS_SELECT_BOOST)
 
 add_subdirectory(src)
 if(WITH_SAMPLES)

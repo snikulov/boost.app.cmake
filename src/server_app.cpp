@@ -119,34 +119,33 @@ bool setup(boost::application::context& context, bool& is_service)
    boost::shared_ptr<boost::application::path> mypath
       = context.find<boost::application::path>(guard);
 
-
-// provide setup for windows service
-#if defined(BOOST_WINDOWS_API)
-#if !defined(__MINGW32__)
-
    // get our executable path name
    boost::filesystem::path executable_path_name = mypath->executable_path_name();
 
    // define our simple installation schema options
-   po::options_description install("service options");
-   install.add_options()
+   po::options_description opts("service options");
+
+// provide setup for windows service
+   opts.add_options()
       ("help", "produce a help message")
+      (",c", "run on console")
+#if defined(BOOST_WINDOWS_API) && !defined(__MINGW32__)
       (",i", "install service")
       (",u", "unistall service")
-      (",c", "run on console")
       ("name", po::value<std::string>()->default_value(mypath->executable_name().stem().string()), "service name")
       ("display", po::value<std::string>()->default_value(""), "service display name (optional, installation only)")
       ("description", po::value<std::string>()->default_value(""), "service description (optional, installation only)")
+#endif
       ;
 
       po::variables_map vm;
-      po::store(po::parse_command_line(myargs->argc(), myargs->argv(), install), vm);
+      po::store(po::parse_command_line(myargs->argc(), myargs->argv(), opts), vm);
       boost::system::error_code ec;
 
       if (vm.count("help"))
       {
-         std::cout << install << std::cout;
-         return true;
+         std::cout << opts << std::cout;
+         exit(0);
       }
 
       if (vm.count("-c"))
@@ -155,14 +154,14 @@ bool setup(boost::application::context& context, bool& is_service)
           return false;
       }
 
-
+#if defined(BOOST_WINDOWS_API) && !defined(__MINGW32__)
       if (vm.count("-i"))
       {
          boost::application::example::install_windows_service(
-         boost::application::setup_arg(vm["name"].as<std::string>()),
-         boost::application::setup_arg(vm["display"].as<std::string>()),
-         boost::application::setup_arg(vm["description"].as<std::string>()),
-         boost::application::setup_arg(executable_path_name)).install(ec);
+             boost::application::setup_arg(vm["name"].as<std::string>()),
+             boost::application::setup_arg(vm["display"].as<std::string>()),
+             boost::application::setup_arg(vm["description"].as<std::string>()),
+             boost::application::setup_arg(executable_path_name)).install(ec);
 
          std::cout << ec.message() << std::endl;
 
@@ -174,35 +173,10 @@ bool setup(boost::application::context& context, bool& is_service)
          boost::application::example::uninstall_windows_service(
             boost::application::setup_arg(vm["name"].as<std::string>()),
             boost::application::setup_arg(executable_path_name)).uninstall(ec);
+
          std::cout << ec.message() << std::endl;
 
          return true;
-      }
-#endif
-#else
-   boost::filesystem::path executable_path_name = mypath->executable_path_name();
-
-   // define our simple installation schema options
-   po::options_description install("service options");
-   install.add_options()
-      ("help", "produce a help message")
-      (",c", "run on console")
-      ;
-
-      po::variables_map vm;
-      po::store(po::parse_command_line(myargs->argc(), myargs->argv(), install), vm);
-      boost::system::error_code ec;
-
-      if (vm.count("help"))
-      {
-         std::cout << install << std::cout;
-         return true;
-      }
-
-      if (vm.count("-c"))
-      {
-          is_service = false;
-          return false;
       }
 #endif
 
@@ -223,14 +197,14 @@ int main(int argc, char *argv[])
 
     // my server aspects
     app_context.insert<boost::application::path>(
-            boost::make_shared<boost::application::default_path>());
+        boost::make_shared<boost::application::path>());
 
     app_context.insert<boost::application::args>(
             boost::make_shared<boost::application::args>(argc, argv));
 
     // add termination handler
     boost::application::handler<>::callback termination_callback
-        = boost::bind<bool>(&server::stop, &app);
+        = boost::bind(&server::stop, &app);
 
     app_context.insert<boost::application::termination_handler>(
             boost::make_shared<boost::application::termination_handler_default_behaviour>(termination_callback));
@@ -239,14 +213,14 @@ int main(int argc, char *argv[])
 #if defined(BOOST_WINDOWS_API)
     // windows only : add pause handler
     boost::application::handler<>::callback pause_callback
-        = boost::bind<bool>(&server::pause, &app);
+        = boost::bind(&server::pause, &app);
 
     app_context.insert<boost::application::pause_handler>(
             boost::make_shared<boost::application::pause_handler_default_behaviour>(pause_callback));
 
     // windows only : add resume handler
     boost::application::handler<>::callback resume_callback
-        = boost::bind<bool>(&server::resume, &app);
+        = boost::bind(&server::resume, &app);
 
     app_context.insert<boost::application::resume_handler>(
             boost::make_shared<boost::application::resume_handler_default_behaviour>(resume_callback));
