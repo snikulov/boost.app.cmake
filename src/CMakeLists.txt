@@ -20,7 +20,5 @@ target_link_libraries(${PROJECT_NAME}
         ${Boost_ATOMIC_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY}
         ${LIBZMQ_LIBRARIES}
 	)
-if(UNIX)
-    target_link_libraries(${PROJECT_NAME} pthread)
-endif()
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 

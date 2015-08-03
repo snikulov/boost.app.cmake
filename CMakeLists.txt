@@ -18,15 +18,14 @@ include_directories(${DEPS_LOCATION}/include)
 link_directories(${DEPS_LOCATION}/lib)
 link_directories(${DEPS_LOCATION}/lib64)
 
+find_package(Threads REQUIRED)
+
 # we will use static libs
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost
    COMPONENTS thread system date_time chrono regex
    filesystem atomic program_options unit_test_framework REQUIRED)
 
-if (NOT Boost_FOUND)
-    message(FATAL "Boost not found")
-endif()
 if (Boost_VERSION LESS 105600)
     message(FATAL "Required Boost version >= 1.56.0")
 endif()
@@ -47,7 +46,7 @@ if(WITH_SAMPLES)
     add_subdirectory(samples)
 endif()
 
-if(WITH_TESTS)
+if(WITH_UT)
     include(CTest)
     enable_testing()
     add_subdirectory(test)
