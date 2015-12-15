@@ -22,3 +22,4 @@ target_link_libraries(${PROJECT_NAME}
 	)
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
+add_cppcheck(${PROJECT_NAME})

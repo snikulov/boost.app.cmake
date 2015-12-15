@@ -19,6 +19,7 @@ link_directories(${DEPS_LOCATION}/lib)
 link_directories(${DEPS_LOCATION}/lib64)
 
 find_package(Threads REQUIRED)
+find_package(CppCheck)
 
 # we will use static libs
 set(Boost_USE_STATIC_LIBS ON)
